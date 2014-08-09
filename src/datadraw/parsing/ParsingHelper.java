@@ -4,53 +4,47 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class ParsingHelper
 {
-	private BufferedReader br;
-	private String last_file = "";
 	
-	public ParsingHelper()
+	public static ArrayList<String[]> ReadCSVData(String filepath)
 	{
+		BufferedReader br;
+		ArrayList<String[]> data = new ArrayList<String[]>();
 		
-	}
-	
-	public void ProcessCSVDataFile(String filepath, ProcessLineListener listener)
-	{
-		// create a new reader for a new file
-		if (last_file != filepath)
+		// create a reader for the file
+		try
 		{
-			try
-			{
-				br = new BufferedReader(new FileReader(filepath));
-				last_file = filepath;
-			}
-			catch (FileNotFoundException e)
-			{
-				System.out.println("The file /'" + filepath + "/' could not be found.");
-				e.printStackTrace();
-				return;
-			}
+			br = new BufferedReader(new FileReader(filepath));
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("The file /'" + filepath + "/' could not be found.");
+			e.printStackTrace();
+			return null;
 		}
 		
+		
+		// read
 		String line;
 
-		try 
+		try
 		{
 			while ((line = br.readLine())!=null)
 			{
-				String[] line_data = line.split(",");
-				if (!listener.ProcessLine(line_data)) return; 
+				data.add(line.split(","));
 			}
-			
-			// end of file
-			System.out.println("Finished reading file.");
+			br.close();
+			return data;
 		} 
 		catch (IOException e)
 		{
 			System.out.println("Error reading line in file /'" + filepath + "/'.");
 			e.printStackTrace();
+			return null;
 		}
 	}
 	

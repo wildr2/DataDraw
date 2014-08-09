@@ -5,7 +5,7 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 
-public class GUISliderInt
+class GUISliderInt
 {
 	// references
 	private EditorElement parent;
