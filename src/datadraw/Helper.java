@@ -3,7 +3,9 @@ import processing.core.*;
 import processing.core.PApplet;
 
 
-
+/**
+ * A handy collection of "other" functions.
+ */
 public class Helper
 {
 	public static int RandomSign(PApplet p)
