@@ -43,9 +43,14 @@ import processing.core.*;
 
 
 /**
- * This is a template class and can be used to start a new processing library or tool.
- * Make sure you rename this class as well as the name of the example package 'template' 
- * to your own library or tool naming convention.
+ * An interface that draws in the processing window and allows the adjustment of values
+ * while the program is running. You can use the 'MakeSlider' function, for instance, to
+ * let you change the value of a float in the Processing window. Editor elements (such as the
+ * slider) are saved when the program is closed and loaded again the next time the program is run,
+ * providing you still call the 'Make...' function and give the element the same name. 
+ * 
+ * Don't make more than one Editor per PApplet if you don't want one editor's save data overwritten
+ * by another's.
  * 
  */
 public class Editor
@@ -83,7 +88,7 @@ public class Editor
 
 	/**
 	 * Call this in the setup() method. If using datadraw.CameraControl, pass a reference to it here; the editor will insure
-	 * that camera controls are disabled while the editor has focus.
+	 * that camera controls are disabled while the editor is being used.
 	 */
 	public Editor(PApplet parent, MouseControl mcontrol, CameraControl camcontrol)
 	{
@@ -107,20 +112,41 @@ public class Editor
 	
 	
 	// PUBLIC ACCESSORS
-
+	
+	/**
+	 * Returns whether some part of the editor is being used (eg. a slider is grabbed).
+	 * 
+	 * @return boolean
+	 */
 	public boolean HasFocus() { return has_focus; }
+	/**
+	 * Returns whether the mouse is over the editor.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseOver() { return mouse_over; }
 	
+	/**
+	 * The top left corner of the editor.
+	 * 
+	 * @return PVector
+	 */
 	public PVector GetPos() { return pos; }
 	
 	
 	// PUBLIC MODIFIERS
 	
+	/**
+	 * Allow the editor to be drawn and updated.
+	 */
 	public void EnableEditor()
 	{ 
 		if (disabled_count > 0) --disabled_count;
 		if (disabled_count == 0) editor_enabled = true;
 	}
+	/**
+	 * Prevent the editor from being drawn or updated.
+	 */
 	public void DisableEditor()
 	{ 
 		++disabled_count;
@@ -136,28 +162,63 @@ public class Editor
 			}
 		}
 	}
+	/**
+	 * Choose a color scheme for the editor.
+	 */
 	public void SetColorScheme(EditorColorScheme scheme)
 	{
 		EditorStyle.SetColorScheme(scheme);
 	}
 	
 	
+	/**
+	 * Add a float slider to the editor. 
+	 * 
+	 * Returns a float[] with one float
+	 * at index 0 (this is required because a float alone is immutable and there must
+	 * be a reference to a float).
+	 * 
+	 * @return float[] 
+	 */
 	public float[] MakeSlider(String name, float min, float max)
 	{
 		EditorSliderFloat s = new EditorSliderFloat(name, this, mcontrol, parent, min, max);
 		AddElement(s);
 		return s.Get();
 	}
+	/**
+	 * Add a float slider to the editor.
+	 * The slider ranges from 0 to 1.
+	 * 
+	 * Returns a float[] with one float
+	 * at index 0 (this is required because a float alone is immutable and there must
+	 * be a reference to a float)
+	 * 
+	 * @return float[] 
+	 */
 	public float[] MakeSlider(String name)
 	{
 		return MakeSlider(name, 0, 1);
 	}
+	/**
+	 * Add an int slider to the editor. Returns a int[] with one int
+	 * at index 0 (this is required because an int alone is immutable and there must
+	 * be a reference to a int)
+	 * 
+	 * @return int[] 
+	 */
 	public int[] MakeSliderInt(String name, int min, int max)
 	{
 		EditorSliderInt s = new EditorSliderInt(name, this, mcontrol, parent, min, max);
 		AddElement(s);
 		return s.Get();
 	}
+	/**
+	 * Add a series of sliders for rgba values.
+	 * Returns an array { r, g, b, a }, each value ranging from 0 to 255.
+	 * 
+	 * @return int[] 
+	 */
 	public int[] MakeColor(String name)
 	{
 		EditorColor s = new EditorColor(name, this, mcontrol, parent);
@@ -165,6 +226,9 @@ public class Editor
 		return s.Get();
 	}
 	
+	/**
+	 * Set the size of text displayed in the editor.
+	 */
 	public void SetTextSize(int size)
 	{
 		EditorStyle.SetTextSize(parent, size);
@@ -407,6 +471,11 @@ public class Editor
 		
 		UpdateGainLoseInteraction();
 	}
+	
+	/**
+	 * Draws the editor. Call this in the 'draw' loop after drawing anything you want drawn
+	 * underneith the editor window.
+	 */
 	public void Draw()
 	{	
 		if (!editor_enabled) return;
