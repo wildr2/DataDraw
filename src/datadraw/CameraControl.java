@@ -31,9 +31,8 @@ import processing.core.*;
 
 
 /**
- * This is a template class and can be used to start a new processing library or tool.
- * Make sure you rename this class as well as the name of the example package 'template' 
- * to your own library or tool naming convention.
+ * Simple 2D camera functionality for panning and zooming around a scene. Plays nice with datadraw.editor.Editor.
+ * Ideal for quickly setting up a 2D visualization that you can 'explore'.
  * 
  */
 public class CameraControl
@@ -61,7 +60,7 @@ public class CameraControl
 	// CONSTRUCTOR
 
 	/**
-	 * Call this in the setup() method.
+	 * Call this in 'setup'.
 	 */
 	public CameraControl(PApplet parent, MouseControl mcontrol)
 	{
@@ -71,6 +70,15 @@ public class CameraControl
 		parent.registerMethod("pre", this);
 	}
 	
+	/**
+	 * Transforms a point from screen coordinates (in pixels) to coordinates modified by
+	 * the panning and zooming CameraControl enables.
+	 * 
+	 * @parem p
+	 *  		A point in screen coordinates.
+	 * 
+	 * @return PVector
+	 */
 	public PVector ToWorldSpace(PVector p)
 	{
 		if (zoom <= 0)
@@ -80,14 +88,29 @@ public class CameraControl
 		}
 		return new PVector((p.x - pan.x) / zoom, (p.y - pan.y) / zoom);
 	}
+	/**
+	 * Transforms a point from world coordinates (modifed by panning and zooming)
+	 * to screen coordinates (in pixels).
+	 * 
+	 * @parem p
+	 *  		A point in world coordinates.
+	 * 
+	 * @return PVector
+	 */
 	public PVector ToScreenSpace(PVector p)
 	{
 		return new PVector(p.x * zoom + pan.x, p.y * zoom + pan.y);
 	}
+	/**
+	 * Do a translation (using Processing's translate) to put panning into affect.
+	 */
 	public void ApplyPanTranslation()
 	{
 		parent.translate(pan.x, pan.y);
 	}
+	/**
+	 * Do a scale (using Processing's scale) to put zooming into affect.
+	 */
 	public void ApplyZoomScale()
 	{
 		parent.scale(zoom);
@@ -95,19 +118,41 @@ public class CameraControl
 	
 	// PUBLIC ACCESSORS
 	
+	/**
+	 * Get a vector describing the current mouse pan.
+	 * 
+	 * @return pVector
+	 */
 	public PVector GetPan() { return pan; }
+	/**
+	 * Get a float describing the zoom scale.
+	 * 
+	 * @return pVector
+	 */
 	public float GetZoom() { return zoom; }
 	
+	/**
+	 * Is the mouse currently panning (left mouse button being dragged).
+	 * 
+	 * @return boolean
+	 */
 	public boolean IsPanning() { return panning; }
 	
 	
 	// PUBLIC MODIFIERES
 	
+	/**
+	 * Allow left mouse button drag to control panning. Note that ApplyPanTranslation
+	 * must be called before drawing objects you want to be affected by panning.
+	 */
 	public void EnablePanning()
 	{ 
 		if (panning_disabled_count > 0) --panning_disabled_count;
 		if (panning_disabled_count == 0) panning_enabled = true;
 	}
+	/**
+	 * Prevent left mouse button drag from controlling panning.
+	 */
 	public void DisablePanning()
 	{ 
 		++panning_disabled_count;
@@ -118,6 +163,10 @@ public class CameraControl
 		}
 	}
 	
+	/**
+	 * Allow the mouse wheel (or other scrolling input) to control zooming. Note that ApplyZoomScale
+	 * must be called before drawing objects you want to be affected by zooming.
+	 */
 	public void EnableZoom()
 	{ 
 		if (zooming_disabled_count > 0) --zooming_disabled_count;
@@ -125,6 +174,10 @@ public class CameraControl
 		
 		zooming_enabled = true;
 	}
+	/**
+	 * Prevent the mouse wheel (or other scrolling input) from controling zooming. Note that ApplyZoomScale
+	 * must be called before drawing objects you want to be affected by zooming.
+	 */
 	public void DisableZooming()
 	{ 
 		++zooming_disabled_count;
@@ -134,6 +187,12 @@ public class CameraControl
 			zooming_enabled = false;
 		}
 	}
+	/**
+	 * Set how quickly you can zoom in or out. 
+	 * 
+	 * @Parem power
+	 * 			speed of zooming between 0 and 1, 1 being the fastest - default is 0.1f
+	 */
 	public void SetZoomPower(float power) 
 	{ 
 		zoom_power = power;
