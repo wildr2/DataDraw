@@ -32,10 +32,8 @@ import processing.event.*;
 
 
 /**
- * This is a template class and can be used to start a new processing library or tool.
- * Make sure you rename this class as well as the name of the example package 'template' 
- * to your own library or tool naming convention.
- * 
+ * Provides high level functions for getting mouse input. The 'AfterDraw' method must be called
+ * at the end of your Processing 'draw' loop for MouseControl to work correctly.
  */
 public class MouseControl
 {	
@@ -54,7 +52,7 @@ public class MouseControl
 	// CONSTRUCTOR
 
 	/**
-	 * Call this in the setup() method.
+	 * Call this in 'setup'.
 	 */
 	public MouseControl(PApplet parent)
 	{
@@ -75,62 +73,148 @@ public class MouseControl
 	{
 		return new PVector(parent.mouseX, parent.mouseY); 
 	}
+	/**
+	 * Return the direction of the mouse wheel.
+	 * 
+	 * @return float
+	 */
 	public float MouseWheel()
 	{
 		return mouse_wheel;
 	}
+	/**
+	 * Return whether the left or right mouse button was just clicked (quickly pressed and released).
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseClicked()
 	{
 		return mouse_clicked;
 	}
+	/**
+	 * Return whether the left mouse button was just clicked (quickly pressed and released).
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseLeftClicked()
 	{
 		return mouse_clicked && parent.mouseButton == PApplet.LEFT;
 	}
+	/**
+	 * Return whether the right mouse button was just clicked (quickly pressed and released).
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseRightClicked()
 	{
 		return mouse_clicked && parent.mouseButton == PApplet.RIGHT;
 	}
+	/**
+	 * Return whether the left or right mouse button is currently down.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseDown()
 	{
 		return mouse_down;
 	}
+	/**
+	 * Return whether the left mouse button is currently down.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseLeftDown()
 	{
 		return mouse_down && parent.mouseButton == PApplet.LEFT;
 	}
+	/**
+	 * Return whether the right mouse button is currently down.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseRightDown()
 	{
 		return mouse_down && parent.mouseButton == PApplet.RIGHT;
 	}
+	/**
+	 * Return whether the left or right mouse button was just pressed.
+	 * The function will return true during only the first frame in which 
+	 * the mouse is pressed.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MousePressedOnce()
 	{
 		return mouse_pressed_once;
 	}
+	/**
+	 * Return whether the left mouse button was just pressed.
+	 * The function will return true during only the first frame in which 
+	 * the mouse is pressed.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseLeftPressedOnce()
 	{
 		return mouse_pressed_once && parent.mouseButton == PApplet.LEFT;
 	}
+	/**
+	 * Return whether the right mouse button was just pressed.
+	 * The function will return true during only the first frame in which 
+	 * the mouse is pressed.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseRightPressedOnce()
 	{
 		return mouse_pressed_once && parent.mouseButton == PApplet.RIGHT;
 	}
+	/**
+	 * Return whether the left or right mouse button was pressed and held,
+	 * and the mouse position has changed.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseDragged()
 	{
 		return mouse_dragged;
 	}
+	/**
+	 * Return whether the left mouse button was pressed and held,
+	 * and the mouse position has changed.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseLeftDragged()
 	{
 		return parent.mouseButton == PApplet.LEFT && mouse_dragged;
 	}
+	/**
+	 * Return whether the right mouse button was pressed and held,
+	 * and the mouse position has changed.
+	 * 
+	 * @return boolean
+	 */
 	public boolean MouseRightDragged()
 	{
 		return parent.mouseButton == PApplet.RIGHT && mouse_dragged;
 	}
+	/**
+	 * Return a delta vector describing the movement of the mouse since
+	 * the mouse started to be dragged.
+	 * 
+	 * @return PVector
+	 */
 	public PVector MouseDragDelta()
 	{		
 		return MouseDragged() ? PVector.sub(Mouse(), mouse_on_press) : new PVector();
 	}
+	/**
+	 * Return the distance the mouse has moved (in pixels) since
+	 * the mouse started to be dragged.
+	 * 
+	 * @return float
+	 */
 	public float MouseDragDistance()
 	{
 		return MouseDragged() ? PVector.dist(Mouse(), mouse_on_press) : 0;
@@ -170,7 +254,7 @@ public class MouseControl
 	
 	
 	/**
-	 * Currently MUST be called at the end of the draw loop for this library to work.
+	 * MUST be called at the end of the draw loop for MouseControl to work.
 	 * 
 	 */
 	public void AfterDraw()
