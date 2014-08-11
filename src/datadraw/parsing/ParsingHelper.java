@@ -7,9 +7,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
+/**
+ * Provides static methods for making data file parsing less of a chore. 
+ * Currently only provides functionality for parsing CSV files.
+ * Does not need to be instanced.
+ */
 public class ParsingHelper
 {
-	
+	/**
+	 * Read a CSV text file, and return the data in a list structure.
+	 * Each String[] contains the data for a single line. Any whitespace is trimmed
+	 * from each value.
+	 * 
+	 * @parem filepath
+	 * 			the complete filepath of the csv file (.txt)
+	 * 
+	 * @return ArrayList<String[]>
+	 */
 	public static ArrayList<String[]> ReadCSVData(String filepath)
 	{
 		BufferedReader br;
