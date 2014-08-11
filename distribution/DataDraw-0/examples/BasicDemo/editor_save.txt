@@ -1,0 +1,4 @@
+Bar Height, SliderInt, 455, 10, 1000
+Color Day Shift, Color, 255, 230, 136, 255
+Color Evening Shift, Color, 255, 187, 118, 255
+Color Midnight Shift, Color, 242, 107, 160, 255
